@@ -48,7 +48,9 @@ class Quantizer(object):
         else:
             prev_amax, bin_width, prev_hist = self.collect_data
             absx = np.abs(x.astype(np.float32))
-            amax = max(prev_amax, absx.max().item())
+
+            # round amax
+            amax = int((max(prev_amax, absx.max().item()) + bin_width) / bin_width) * bin_width
             number_of_bins = math.ceil(amax / bin_width)
             hist = np.histogram(absx, bins=number_of_bins, range=(0, amax))[0]
             hist[:len(prev_hist)] += prev_hist
